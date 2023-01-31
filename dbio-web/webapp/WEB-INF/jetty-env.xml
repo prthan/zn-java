@@ -1,0 +1,58 @@
+<?xml version="1.0"?><!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_3.dtd">
+<Configure id="wac" class="org.eclipse.jetty.webapp.WebAppContext">
+  <!-- <New id="jdbc-mdbio" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg><Ref refid="mdbio"/></Arg>
+    <Arg>jdbc/mdbio</Arg>
+    <Arg>
+      <New class="com.mysql.cj.jdbc.MysqlConnectionPoolDataSource">
+        <Set name="Url">jdbc:mysql://localhost:6306/zn</Set>
+        <Set name="User">znuser</Set>
+        <Set name="Password">znuser</Set>
+    </New>
+    </Arg>
+  </New> -->
+
+  <!-- <New id="jdbc-mdbio" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg><Ref refid="mdbio"/></Arg>
+    <Arg>jdbc/mdbio</Arg>
+    <Arg>
+      <New class="com.mysql.cj.jdbc.MysqlConnectionPoolDataSource">
+        <Set name="Url">jdbc:mysql://localhost:6306/zn</Set>
+        <Set name="User">znuser</Set>
+        <Set name="Password">znuser</Set>
+    </New>
+    </Arg>
+  </New> -->
+
+  <New id="jdbc-odbio" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg><Ref refid="dbio"/></Arg>
+    <Arg>jdbc/dbio</Arg>
+    <Arg>
+      <New class="oracle.jdbc.pool.OracleDataSource">
+        <Set name="DriverType">thin</Set>
+        <Set name="URL">jdbc:oracle:thin:@//130.61.80.185:1521/OCIPDB01.sub07301043290.vcn01paas01.oraclevcn.com</Set>
+        <Set name="User">ihub</Set>
+        <Set name="Password">passw0rd</Set>
+      </New>
+    </Arg>
+  </New>
+
+  <!-- <New id="jdbc-dbio" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg><Ref refid="dbio"/></Arg>
+    <Arg>jdbc/dbio</Arg>
+    <Arg>
+      <New class="oracle.jdbc.pool.OracleDataSource">
+        <Set name="DriverType">thin</Set>
+        <Set name="URL">jdbc:oracle:thin:@//130.61.80.185:1521/OCIPDB01.sub07301043290.vcn01paas01.oraclevcn.com</Set>
+        <Set name="User">ihub</Set>
+        <Set name="Password">passw0rd</Set>
+        <Set name="connectionCachingEnabled">true</Set>
+        <Set name="connectionCacheProperties">
+          <New class="java.util.Properties">
+            <Call name="setProperty"><Arg>MinLimit</Arg><Arg>5</Arg></Call>
+          </New>
+        </Set>        
+      </New>
+    </Arg>
+  </New> -->
+</Configure>

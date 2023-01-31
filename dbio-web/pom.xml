@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>zn</groupId>
+  <artifactId>dbio-web</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+ 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>    
+  </properties>
+
+  <build>
+    <directory>${project.basedir}/.work/web</directory>
+    <outputDirectory>${project.basedir}/.work/web/classes</outputDirectory>
+    <finalName>zn.dbio</finalName>
+    <testOutputDirectory>${project.basedir}/.work/web/test-classes</testOutputDirectory>
+    <sourceDirectory>${project.basedir}/src</sourceDirectory>
+    <scriptSourceDirectory>${project.basedir}/src/scripts</scriptSourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/res</directory>
+      </resource>
+    </resources>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.3</version>
+          <configuration>
+            <warSourceDirectory>${project.basedir}/webapp</warSourceDirectory>
+            <outputDirectory>${project.basedir}/../../package</outputDirectory>
+            <!-- <webResources>
+              <resource>
+                  <directory>${project.basedir}/../lib/dbio</directory>
+                  <targetPath>WEB-INF/lib</targetPath>
+                  <includes>
+                      <include>**/*.jar</include>
+                  </includes>
+              </resource>
+              <resource>
+                <directory>${project.basedir}/../.work/html/prod</directory>
+                <targetPath>.</targetPath>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+              </resource>
+            </webResources>             -->
+          </configuration>
+        </plugin>        
+      </plugins>
+    </pluginManagement>
+
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.6</version>
+    </dependency>    
+    <dependency>
+      <groupId>zn</groupId>
+      <artifactId>zn-rs</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>   
+    <dependency>
+      <groupId>zn</groupId>
+      <artifactId>dbio-core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>zn</groupId>
+      <artifactId>dbio-rs</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>    
+  </dependencies>
+
+</project>
