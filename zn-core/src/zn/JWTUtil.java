@@ -12,6 +12,9 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
+import zn.model.AuthConfig;
+import zn.model.TokenResponse;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,18 +32,48 @@ public class JWTUtil
 
   }
 
-  public String createToken(Map<String, Object> payload, String privateKeySpec, String privateKeyID) throws Exception
+  public String getToken(AuthConfig authConfig) throws Exception
+  {
+    String authorization=new String(b64enc.encode(String.format("%s:%s", authConfig.getClientId(), authConfig.getClientSecret()).getBytes()));
+    
+    Http http=new Http();
+    TokenResponse tokenResponse=null;
+    if(authConfig.getClientAssertionType()==null)
+    {
+      http.post(authConfig.getTokenUrl(), String.format("grant_type=%s&scope=%s", authConfig.getGrantType(), authConfig.getScope()))
+          .withHeader("content-type", "application/x-www-form-urlencoded")
+          .withHeader("authorization", "Basic " + authorization);
+    }
+    else
+    {
+      String assertionJWT=createJWT(authConfig.getClientId(), authConfig.getClientId(), authConfig.getAud(), authConfig.getKid(), null, authConfig.getPrivateKey());
+      String postPayload=String.format("grant_type=%s&scope=%s&client_id=%s&client_assertion_type=%s&&client_assertion=%s", 
+                                        authConfig.getGrantType(), authConfig.getScope(), authConfig.getClientId(), authConfig.getClientAssertionType(), assertionJWT);
+      http.post(authConfig.getTokenUrl(), postPayload)
+          .withHeader("content-type", "application/x-www-form-urlencoded");
+    }
+    tokenResponse=http.$(TokenResponse.class);
+    return tokenResponse.getAccessToken();
+  }
+
+  public String createJWT(String sub, String iss, String aud, String kid, Map<String, Object> extra, String privateKeySpec) throws Exception
   {
     Map<String, Object> header=new HashMap<String, Object>();
     header.put("alg", "RS256");
     header.put("typ", "JWT");
-    if(privateKeyID!=null) header.put("kid", privateKeyID);
+    if(kid!=null) header.put("kid", kid);
     
     long now=(System.currentTimeMillis()/1000);
     int expiry=3600;
+
+    Map<String, Object> payload=new HashMap<String, Object>();
+    if(extra!=null) payload.putAll(extra);
+    payload.put("sub", sub);
+    payload.put("iss", iss);
+    payload.put("aud", aud);
     payload.put("iat", now);
     payload.put("exp", now+expiry);
-
+    
     String encodedHeader=new String(b64Urlenc.encode(Json.stringify(header).getBytes()));
     String encodedPayload=new String(b64Urlenc.encode(Json.stringify(payload).getBytes()));
     

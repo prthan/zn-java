@@ -110,6 +110,11 @@ public class Client
     Identity identityToSend=identity;
     if(identityGetter!=null) identityToSend=identityGetter.$();
 
+    if(identityToSend==null)
+    {
+      LOG.error("unable to get identity");
+      return;
+    }
     AnnounceMSG msg=new AnnounceMSG();
     msg.setIdentity(identityToSend);
     msg.setClientType("java-msg-client");
