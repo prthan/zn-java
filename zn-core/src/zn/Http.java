@@ -1,10 +1,12 @@
 package zn;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import zn.Json;
@@ -20,6 +22,7 @@ public class Http
   private Object body;
   private InputStream responseStream;
   private Exception requestError;
+  private HttpURLConnection uc;
 
   private static Logger LOG=Logger.get(Http.class);
 
@@ -127,11 +130,14 @@ public class Http
     return rval;
   }
   
+  public int responseCode() throws IOException {return uc.getResponseCode();};
+  public String responseMessage() throws IOException {return uc.getResponseMessage();};
+  public Map<String, List<String>> responseHeaders() throws IOException {return uc.getHeaderFields();};
 
   private void doRequest() throws Exception
   {
     LOG.debug(String.format("🕷️ http %s: %s", method, url));
-    HttpURLConnection uc=(HttpURLConnection)new URL(url).openConnection();
+    uc=(HttpURLConnection)new URL(url).openConnection();
     uc.setDoInput(true);
     uc.setDoOutput(true);
     uc.setRequestMethod(method);

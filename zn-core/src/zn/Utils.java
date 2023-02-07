@@ -4,8 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class Utils 
@@ -165,6 +167,14 @@ public class Utils
     return Json.parseJson(Json.stringify(map), objClass);
   }
   
+  public final static SimpleDateFormat DTTM_HTTP_HEADER_FMT=new SimpleDateFormat("EEE, dd MMM YYYY HH:mm:ss z");
+  static 
+  {
+    DTTM_HTTP_HEADER_FMT.setTimeZone(TimeZone.getTimeZone("GMT"));
+  }
+
+  public final static SimpleDateFormat DTTM_RFC3339_FMT=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
+
   public static void main(String[] args)
   {
     String v="db.test";
