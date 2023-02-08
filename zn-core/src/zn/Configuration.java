@@ -1,7 +1,10 @@
 package zn;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Configuration extends LinkedHashMap<String, Object>
@@ -13,7 +16,18 @@ public class Configuration extends LinkedHashMap<String, Object>
 
   public static void createInstanceFromJsonFile(String fileName)
   {
-    __instance=Json.fromFile(fileName, Configuration.class);
+    String content=Utils.fileToString(fileName);
+    Map<String, Map<String, String>> ctxvars=new HashMap<String, Map<String, String>>();
+    ctxvars.put("sys", Utils.propertiesToMap(System.getProperties()));
+    ctxvars.put("env", System.getenv());
+    List<String> missingVars=new ArrayList<String>();
+    String expandedContent=Utils.expandStringTemplate(content, ctxvars, missingVars);
+    
+    if(missingVars.size()!=0)
+    {
+      for(String v:missingVars) System.out.println(String.format("%s is not set", v));
+    }
+    __instance=Json.parseJson(expandedContent, Configuration.class);
   }
 
   public static void createInstanceFromResource(String resource)
@@ -58,4 +72,7 @@ public class Configuration extends LinkedHashMap<String, Object>
     return (String)value;
   }
 
+  public static void main(String[] args)
+  {
+  }
 }

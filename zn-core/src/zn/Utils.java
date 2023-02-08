@@ -5,10 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils 
 {
@@ -108,6 +112,48 @@ public class Utils
     }
     
     return str;
+  }
+
+  public static String expandStringTemplate(String template, Map<String, ? extends Map<String, String>> ctxvars, List<String> missingVars)
+  {
+    Pattern pattern=Pattern.compile("\\$\\{(.+?)\\}");
+    
+    int s=0;
+    StringBuilder sb=new StringBuilder();
+    Matcher matcher=pattern.matcher(template);
+    while(matcher.find())
+    {
+      sb.append(template.substring(s, matcher.start()));
+      String match=matcher.group(0);
+      String varToken=match.substring(2, match.length()-1);
+      String[] varParts=varToken.split("\\.");
+      Map<String, String> ctx=ctxvars.get(varParts[0].toLowerCase());
+      if(ctx!=null)
+      {
+        String varValue=ctx.get(varParts[1]);
+        if(varValue!=null) sb.append(ctx.get(varParts[1]));
+        else
+        {
+          sb.append(match);
+          if(missingVars!=null) missingVars.add(varToken);
+        }
+      }
+      else sb.append(match);
+      s=matcher.end();
+    }
+    sb.append(template.substring(s));
+    return sb.toString();
+  }
+
+  public static Map<String, String> propertiesToMap(Properties props)
+  {
+    Map<String, String> map=new HashMap<String, String>();
+    for(Map.Entry<Object, Object> entry:props.entrySet())
+    {
+      map.put((String)entry.getKey(), entry.getValue().toString());
+    }
+
+    return map;
   }
 
   public static String shortid()
